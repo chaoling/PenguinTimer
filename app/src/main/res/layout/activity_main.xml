@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.chaol.penguintimer.MainActivity">
+
+    <SeekBar
+        android:id="@+id/timer_setting_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/activity_vertical_margin" />
+
+    <ImageView
+        android:id="@+id/penguintimer"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/timer_setting_bar"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="15dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/penguin" />
+
+    <Button
+        android:id="@+id/controll_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="80dp"
+        android:text="GO!" />
+
+    <TextView
+        android:id="@+id/timer_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/controll_btn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="42dp"
+        android:text="00:00"
+        android:textColor="@android:color/white"
+        android:textSize="80sp" />
+</RelativeLayout>
