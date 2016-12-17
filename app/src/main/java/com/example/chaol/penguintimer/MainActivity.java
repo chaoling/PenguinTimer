@@ -1,5 +1,6 @@
 package com.example.chaol.penguintimer;
 
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -7,13 +8,20 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.TimePicker;
+
+import java.util.Calendar;
 
 
 public class MainActivity extends AppCompatActivity {
+    private final int DEFAULT_SEEKBAR_MAX = 600;
     private SeekBar mSeekBar;
     private TextView mTv;
     private Button mBtn;
@@ -23,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private AudioManager mAudioManager;
     private long mTimeLeft; //time in milliseconds until done
     private int mLoopPos; //loop to location for media player
+    private int mSeekBarMax = DEFAULT_SEEKBAR_MAX; //seconds
+    private int mSoundResourceId = R.raw.cuckoo;
 
     private AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
         @Override
@@ -61,6 +71,64 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.maxTime:
+                showSetMaxTimeDialog();
+                return true;
+            case R.id.selectRingTone:
+                //showSetRingToneDialog();
+                return true;
+            case R.id.alarmclock:
+                mSoundResourceId = R.raw.alarmclock;
+                break;
+            case R.id.cuckoo:
+                mSoundResourceId = R.raw.cuckoo;
+                break;
+            case R.id.doorbuzzer:
+                mSoundResourceId = R.raw.doorbuzzer;
+                break;
+            case R.id.pagerbeeps:
+                mSoundResourceId = R.raw.pagerbeeps;
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        playFinishedSound();
+        return true;
+    }
+
+    private void showSetMaxTimeDialog() {
+        final Calendar c = Calendar.getInstance();
+        int minute = c.get(Calendar.MINUTE);
+        int second = c.get(Calendar.SECOND);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(MainActivity.this,
+                new TimePickerDialog.OnTimeSetListener() {
+
+                    @Override
+                    public void onTimeSet(TimePicker view, int minute,
+                                          int second) {
+                        int timeInSeconds = minute * 60 + second;
+                        updateTimerView(timeInSeconds);
+                        mSeekBarMax = timeInSeconds > DEFAULT_SEEKBAR_MAX ? timeInSeconds : DEFAULT_SEEKBAR_MAX;
+                        if (mSeekBar != null) {
+                            mSeekBar.setMax(mSeekBarMax);
+                            mSeekBar.setProgress(timeInSeconds);
+                        }
+                    }
+                }, minute, second, true);
+        timePickerDialog.show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +138,10 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState != null && !savedInstanceState.isEmpty()) {
             Log.v("Activity Life Cycle: ", "retriving activity state...");
             //mIsTicking = savedInstanceState.getBoolean("wasTimerTicking", false);
+            mSoundResourceId = savedInstanceState.getInt("soundResourceId", R.id.cuckoo);
             mLoopPos = savedInstanceState.getInt("mediaLoop", 0);
             mTimeLeft = savedInstanceState.getLong("timeLeft", 0L);
+            mSeekBarMax = savedInstanceState.getInt("seekBarMax", 600);
             mIsTicking = mTimeLeft > 0L;
             Log.v("Activity", "isTicking: " + (mIsTicking ? "true" : "false"));
             Log.v("Activity", "timeLeft:" + mTimeLeft);
@@ -84,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (mSeekBar == null) {
             mSeekBar = (SeekBar) findViewById(R.id.timer_setting_bar);
-            mSeekBar.setMax(600);
+            mSeekBar.setMax(mSeekBarMax);
             mSeekBar.setProgress((int) mTimeLeft / 1000);
             mSeekBar.setEnabled(!mIsTicking);
             mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -158,13 +228,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Log.v("Activity Life Cycle: ", "onSavedInstanceState");
-        //outState.putBoolean("wasTimerTicking", mIsTicking);
+        outState.putInt("seekBarMax", mSeekBarMax);
         if (mPlayer != null) {
             Log.v("mPlayer", "current media player position is:" + mLoopPos);
             mLoopPos = mPlayer.getCurrentPosition();
         }
         outState.putInt("mediaLoop", mLoopPos);
         outState.putLong("timeLeft", mTimeLeft);
+        outState.putInt("soundResourceId", mSoundResourceId);
     }
 
     private void pauseTimer() {
@@ -242,7 +313,7 @@ public class MainActivity extends AppCompatActivity {
                 AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
 
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-            mPlayer = MediaPlayer.create(this, R.raw.doorbuzzer);
+            mPlayer = MediaPlayer.create(this, mSoundResourceId);
             mPlayer.start();
             mPlayer.setOnCompletionListener(mCompletionListener);
         }
