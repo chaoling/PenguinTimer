@@ -3,10 +3,32 @@
     <string name="start">GO!</string>
     <string name="stop">STOP</string>
     <string name="initTime">00:00</string>
-    <string name="option1">selectMaxTime</string>
-    <string name="option2">selectRingTone</string>
+    <string name="option1">SelectTimerRange</string>
+    <string name="option2">Settings</string>
     <string name="alarmclock">alarmclock</string>
     <string name="cuckoo">cuckoo</string>
     <string name="doorbuzzer">doorbuzzer</string>
     <string name="pagerbeeps">pagerbeeps</string>
+
+    <string name="pref_ringtone_label_alarmclock">Alarm Clock</string>
+    <string name="pref_ringtone_label_cuckoo">Cuckoo</string>
+    <string name="pref_ringtone_label_doorbuzzer">Door Buzzer</string>
+    <string name="pref_ringtone_label_pagebeeps">Pager Beeps</string>
+
+    <string name="pref_ringtone_alarmclock">alarmclock</string>
+    <string name="pref_ringtone_cuckoo">cuckoo</string>
+    <string name="pref_ringtone_doorbuzzer">doorbuzzer</string>
+    <string name="pref_ringtone_pagebeeps">pagerbeeps</string>
+
+    <string name="pref_ringtone_label">Select Ringtone</string>
+    <string name="pref_ringtone_key" translatable="false">ringtone</string>
+
+    <string name="title_activity_settings">Settings Activity</string>
+
+    <string name="pref_enable_tick_sound_effect_default" translatable="false">false</string>
+    <string name="pref_enable_tick_sound_effect_true">Enabled</string>
+    <string name="pref_enable_tick_sound_effect_false">Not Enabled</string>
+    <string name="pref_enable_tick_sound_effect_label">Enable Sound Effect</string>
+    <string name="pref_enable_tick_sound_effect_key">enable_sound_effect</string>
+
 </resources>

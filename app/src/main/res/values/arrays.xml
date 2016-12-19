@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="pref_ringtone_options">
+        <item>@string/pref_ringtone_label_alarmclock</item>
+        <item>@string/pref_ringtone_label_cuckoo</item>
+        <item>@string/pref_ringtone_label_doorbuzzer</item>
+        <item>@string/pref_ringtone_label_pagebeeps</item>
+    </string-array>
+
+    <string-array name="pref_ringtone_values">
+        <item>@string/pref_ringtone_alarmclock</item>
+        <item>@string/pref_ringtone_cuckoo</item>
+        <item>@string/pref_ringtone_doorbuzzer</item>
+        <item>@string/pref_ringtone_pagebeeps</item>
+    </string-array>
+</resources>

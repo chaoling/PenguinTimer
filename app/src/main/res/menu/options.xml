@@ -1,28 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.chaol.penguintimer.MainActivity">
     <item
-        android:id="@+id/maxTime"
+        android:id="@+id/time_picker"
         android:alphabeticShortcut="O"
         android:icon="@drawable/penguin"
         android:numericShortcut="1"
         android:title="@string/option1"
         app:showAsAction="ifRoom"></item>
     <item
-        android:id="@+id/selectRingTone"
-        android:title="@string/option2" />
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/alarmclock"
-            android:title="@string/alarmclock" />
-        <item
-            android:id="@+id/cuckoo"
-            android:title="@string/cuckoo" />
-        <item
-            android:id="@+id/doorbuzzer"
-            android:title="@string/doorbuzzer" />
-        <item
-            android:id="@+id/pagerbeeps"
-            android:title="@string/pagerbeeps" />
-    </group>
+        android:id="@+id/activity_settings"
+        android:numericShortcut="2"
+        android:title="@string/option2"
+        app:showAsAction="never"></item>
+
 </menu>

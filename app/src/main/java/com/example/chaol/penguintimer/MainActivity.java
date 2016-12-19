@@ -2,6 +2,7 @@ package com.example.chaol.penguintimer;
 
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private long mTimeLeft; //time in milliseconds until done
     private int mLoopPos; //loop to location for media player
     private int mSeekBarMax = DEFAULT_SEEKBAR_MAX; //seconds
+    private boolean mIsTickSoundEffectEnabled = false;
     private int mSoundResourceId = R.raw.cuckoo;
 
     private AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
@@ -82,32 +84,18 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.maxTime:
-                showSetMaxTimeDialog();
+            case R.id.time_picker:
+                showSetAlarmTimeDialog();
                 return true;
-            case R.id.selectRingTone:
-                //showSetRingToneDialog();
+            case R.id.activity_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
                 return true;
-            case R.id.alarmclock:
-                mSoundResourceId = R.raw.alarmclock;
-                break;
-            case R.id.cuckoo:
-                mSoundResourceId = R.raw.cuckoo;
-                break;
-            case R.id.doorbuzzer:
-                mSoundResourceId = R.raw.doorbuzzer;
-                break;
-            case R.id.pagerbeeps:
-                mSoundResourceId = R.raw.pagerbeeps;
-                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
-        playFinishedSound();
-        return true;
     }
 
-    private void showSetMaxTimeDialog() {
+    private void showSetAlarmTimeDialog() {
         final Calendar c = Calendar.getInstance();
         int minute = c.get(Calendar.MINUTE);
         int second = c.get(Calendar.SECOND);
@@ -134,17 +122,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(com.example.chaol.penguintimer.R.layout.activity_main);
-        Log.v("Activity Life Cycle: ", "onCreate");
+        String soundName = Utility.getRingtoneResourceName(this);
+        mSoundResourceId = Utility.getRingtoneResourceIdByName(this, soundName);
+        //Log.v("Activity","Sound Name is: "+soundName);
+        mIsTickSoundEffectEnabled = Utility.isSoundEffectEnabled(this);
+        //Log.v("Activity","isTickSoundEffectEnabled? "+(mIsTickSoundEffectEnabled? "true":"false"));
+
+        //Log.v("Activity Life Cycle: ", "onCreate");
         if (savedInstanceState != null && !savedInstanceState.isEmpty()) {
-            Log.v("Activity Life Cycle: ", "retriving activity state...");
-            //mIsTicking = savedInstanceState.getBoolean("wasTimerTicking", false);
-            mSoundResourceId = savedInstanceState.getInt("soundResourceId", R.id.cuckoo);
+            //Log.v("Activity Life Cycle: ", "retriving activity state...");
             mLoopPos = savedInstanceState.getInt("mediaLoop", 0);
             mTimeLeft = savedInstanceState.getLong("timeLeft", 0L);
             mSeekBarMax = savedInstanceState.getInt("seekBarMax", 600);
             mIsTicking = mTimeLeft > 0L;
-            Log.v("Activity", "isTicking: " + (mIsTicking ? "true" : "false"));
-            Log.v("Activity", "timeLeft:" + mTimeLeft);
+            //Log.v("Activity", "isTicking: " + (mIsTicking ? "true" : "false"));
+            //Log.v("Activity", "timeLeft:" + mTimeLeft);
         }
         // Create and setup the {@link AudioManager} to request audio focus
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -166,13 +158,13 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onStartTrackingTouch(SeekBar seekBar) {
                     //TODO
-                    Log.v("ChangedListener", "onStartTracking");
+                    //Log.v("ChangedListener", "onStartTracking");
                 }
 
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
                     //TODO
-                    Log.v("ChangedListener", "onStopTracking");
+                    //Log.v("ChangedListener", "onStopTracking");
                 }
             });
         }
@@ -200,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        Log.v("Activity Life Cycle: ", "onPause");
+        //Log.v("Activity Life Cycle: ", "onPause");
         releaseMediaPlayer();
         pauseTimer();
     }
@@ -214,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.v("Activity Life Cycle:", "onResume");
+        //Log.v("Activity Life Cycle:", "onResume");
 
         if (mTimeLeft > 0L) {
             resumeTimer();
@@ -227,15 +219,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.v("Activity Life Cycle: ", "onSavedInstanceState");
+        //Log.v("Activity Life Cycle: ", "onSavedInstanceState");
         outState.putInt("seekBarMax", mSeekBarMax);
         if (mPlayer != null) {
-            Log.v("mPlayer", "current media player position is:" + mLoopPos);
+            //Log.v("mPlayer", "current media player position is:" + mLoopPos);
             mLoopPos = mPlayer.getCurrentPosition();
         }
         outState.putInt("mediaLoop", mLoopPos);
         outState.putLong("timeLeft", mTimeLeft);
-        outState.putInt("soundResourceId", mSoundResourceId);
+        //outState.putInt("soundResourceId", mSoundResourceId);
+        //outState.putBoolean("isTickSoundEffectEnabled",mIsTickSoundEffectEnabled);
     }
 
     private void pauseTimer() {
@@ -249,16 +242,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void resumeTimer() {
-        Log.v("Timer Activity:", "resume Timer");
+        //Log.v("Timer Activity:", "resume Timer");
         mSeekBar.setProgress((int) mTimeLeft / 1000);
         mSeekBar.setEnabled(!mIsTicking);
         mBtn.setText((mIsTicking ? "STOP" : "GO!"));
-        Log.v("Timer Activity: ", "start timer at: " + mTimeLeft);
+        //Log.v("Timer Activity: ", "start timer at: " + mTimeLeft);
         startTimer();
     }
 
     private void resetView() {
-        Log.v("View Activity:", "resetView");
+        //Log.v("View Activity:", "resetView");
         mBtn.setText(R.string.start);
         mTv.setText(R.string.initTime);
         mSeekBar.setEnabled(true);
@@ -266,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void stopTimer() {
-        Log.v("Timer Activity:", "stopTimer");
+        //Log.v("Timer Activity:", "stopTimer");
         if (mTimer != null) {
             mTimer.cancel();
         }
@@ -275,20 +268,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startTimer() {
-        Log.v("Timer Activity", "startTimer");
+        //Log.v("Timer Activity", "startTimer");
         if (mTimeLeft > 0L) {
+
             mTimer = new CountDownTimer(mTimeLeft, 1000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
                     mTimeLeft = millisUntilFinished;
                     int secondsUntilFinished = (int) (millisUntilFinished) / 1000;
-                    Log.v("startTimer Activity", "tick: " + secondsUntilFinished);
+                    //Log.v("startTimer Activity", "tick: " + secondsUntilFinished);
                     updateTimerView(secondsUntilFinished);
                 }
 
                 @Override
                 public void onFinish() {
-                    Log.v("startTimer Activity", "timer paused/finished");
+                    //Log.v("startTimer Activity", "timer paused/finished");
                     updateTimerView(0);
                     mTimeLeft = 0L;
                     mIsTicking = false;
@@ -313,6 +307,10 @@ public class MainActivity extends AppCompatActivity {
                 AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
 
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            String ringtoneName = Utility.getRingtoneResourceName(this);
+            //Log.v("MainActivity","ringtone name is "+ringtoneName);
+            //mSoundResourceId = Utility.getRingtoneResourceIdByName(this,ringtoneName);
+            //Log.v("MainActivity","ringtome id is "+mSoundResourceId);
             mPlayer = MediaPlayer.create(this, mSoundResourceId);
             mPlayer.start();
             mPlayer.setOnCompletionListener(mCompletionListener);

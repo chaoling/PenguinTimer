@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ListPreference
+        android:defaultValue="@string/pref_ringtone_cuckoo"
+        android:entries="@array/pref_ringtone_options"
+        android:entryValues="@array/pref_ringtone_values"
+        android:key="@string/pref_ringtone_key"
+        android:title="@string/pref_ringtone_label" />
+
+    <CheckBoxPreference
+        android:defaultValue="@string/pref_enable_tick_sound_effect_default"
+        android:key="@string/pref_enable_tick_sound_effect_key"
+        android:summaryOff="@string/pref_enable_tick_sound_effect_false"
+        android:summaryOn="@string/pref_enable_tick_sound_effect_true"
+        android:title="@string/pref_enable_tick_sound_effect_label" />
+
+</PreferenceScreen>
