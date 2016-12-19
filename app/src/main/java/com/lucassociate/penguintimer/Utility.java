@@ -1,4 +1,4 @@
-package com.example.chaol.penguintimer;
+package com.lucassociate.penguintimer;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -1,4 +1,4 @@
-package com.example.chaol.penguintimer;
+package com.lucassociate.penguintimer;
 
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.example.chaol.penguintimer.R.layout.activity_main);
+        setContentView(R.layout.activity_main);
         String soundName = Utility.getRingtoneResourceName(this);
         mSoundResourceId = Utility.getRingtoneResourceIdByName(this, soundName);
         //Log.v("Activity","Sound Name is: "+soundName);

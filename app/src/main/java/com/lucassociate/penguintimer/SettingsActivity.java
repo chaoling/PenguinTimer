@@ -1,4 +1,4 @@
-package com.example.chaol.penguintimer;
+package com.lucassociate.penguintimer;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
@@ -9,6 +9,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings.
